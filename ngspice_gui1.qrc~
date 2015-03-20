@@ -1,0 +1,9 @@
+ <!DOCTYPE RCC><RCC version="1.0">
+    <qresource>
+        <file>Button-Play-icon.png</file>
+        <file>compile-icon.png</file>
+        <file>open-file-icon.png</file>        
+    </qresource>
+    </RCC>
+    
+    
