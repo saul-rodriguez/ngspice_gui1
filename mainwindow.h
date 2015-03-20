@@ -10,6 +10,7 @@
 #include "tran.h"
 #include "noise.h"
 #include "pss.h"
+#include "pz.h"
 
 namespace Ui {
 class MainWindow;
@@ -30,6 +31,7 @@ private:
     Tran tran;
     Noise noise;
     PSS pss;
+    PZ pz;
 
     //int selected_source_index;
 
@@ -39,6 +41,7 @@ public:
     void readTRANconfig();
     void readNOISEconfig();
     void readPSSconfig();
+    void readPZconfig();
 
     void updateSimNetlist();
 
@@ -71,6 +74,8 @@ private slots:
     void on_NOISE_checkBox_clicked();
 
     void on_PSS_checkBox_clicked();
+
+    void on_PZ_checkBox_clicked();
 
 private:
     Ui::MainWindow *ui;

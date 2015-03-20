@@ -120,6 +120,11 @@ void MainWindow::on_actionBuild_Simulation_File_triggered()
         control += pss.option;
     }
 
+    if (pz.enable) {
+        readPZconfig();
+        control += pz.option;
+    }
+
     // Add manual control lines after analysis
     control += after;
     control += "\nrusage all\n";
@@ -338,7 +343,7 @@ void MainWindow::on_pushButtonApply_clicked()
     //Read independent transient manual configuration tab info
     updateSourceTrans(selected_index);
 
-    //Create a option line including all the manually added options
+    //Create an option line including all the manually added options
     spice.source[selected_index].prepareOption();
 
 }
@@ -586,3 +591,41 @@ void MainWindow::readPSSconfig()
 }
 
 
+void MainWindow::readPZconfig()
+{
+    pz.n1 = ui->lineEditPZ_V1->text();
+    pz.n2 = ui->lineEditPZ_V2->text();
+    pz.n3 = ui->lineEditPZ_V3->text();
+    pz.n4 = ui->lineEditPZ_V4->text();
+
+    if (ui->radioButtonPZ_cur->isChecked()) {
+        pz.type = "cur";
+    } else {
+        pz.type = "vol";
+    }
+
+    if (ui->radioButtonPZ_pz->isChecked()) {
+        pz.anal = "pz";
+    } else if (ui->radioButtonPZ_pol->isChecked()) {
+        pz.anal = "pol";
+    } else if (ui->radioButtonPZ_zer->isChecked()) {
+        pz.anal = "zer";
+    }
+
+    pz.getControl();
+
+}
+
+
+void MainWindow::on_PZ_checkBox_clicked()
+{
+    bool state;
+
+    state = ui->PZ_checkBox->isChecked();
+
+    if (state) {
+        pz.enable = true;
+    } else {
+        pz.enable = false;
+    }
+}

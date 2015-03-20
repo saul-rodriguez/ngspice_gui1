@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     dc.cpp \
     tran.cpp \
     noise.cpp \
-    pss.cpp
+    pss.cpp \
+    pz.cpp
 
 HEADERS  += mainwindow.h \
     spicefile.h \
@@ -33,7 +34,8 @@ HEADERS  += mainwindow.h \
     dc.h \
     tran.h \
     noise.h \
-    pss.h
+    pss.h \
+    pz.h
 
 FORMS    += mainwindow.ui
 
