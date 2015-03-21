@@ -21,6 +21,9 @@ public:
 
     QString getControl();
 
+    void saveState(QDataStream* out);
+    void loadState(QDataStream* in);
+
 signals:
 
 public slots:

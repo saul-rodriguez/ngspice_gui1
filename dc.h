@@ -23,6 +23,9 @@ public:
 
     QString getControl();
 
+    void saveState(QDataStream* out);
+    void loadState(QDataStream* in);
+
 public:
     explicit Dc(QObject *parent = 0);
 

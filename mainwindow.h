@@ -77,6 +77,14 @@ private slots:
 
     void on_PZ_checkBox_clicked();
 
+    void on_pushButtonPLOT_CREATE_clicked();
+
+    void on_pushButtonPLOT_APPEND_clicked();
+
+    void on_actionSave_State_triggered();
+
+    void on_actionLoad_State_triggered();
+
 private:
     Ui::MainWindow *ui;
     SpiceFile spice;

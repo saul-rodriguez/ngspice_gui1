@@ -629,3 +629,138 @@ void MainWindow::on_PZ_checkBox_clicked()
         pz.enable = false;
     }
 }
+
+void MainWindow::on_pushButtonPLOT_CREATE_clicked()
+{
+    QString plot;
+
+    if (ui->radioButtonPLOT_PLOT->isChecked()) {
+        plot = "plot ";
+    } else {
+        plot = "gnuplot ";
+    }
+
+    plot += ui->lineEditPLOT_EXPRS->text();
+    plot += " ";
+
+    if (QString::compare(ui->lineEditPLOT_XNAME->text(),"")) {
+        plot += "vs ";
+        plot += ui->lineEditPLOT_XNAME->text();
+        plot += " ";
+    }
+
+    if (ui->checkBox_PLOT_YLIMIT->isChecked()) {
+        plot += "ylimit";
+        plot += " ";
+        plot += ui->lineEditPLOT_YLO->text();
+        plot += " ";
+        plot += ui->lineEditPLOT_YHI->text();
+        plot += " ";
+    }
+
+    if (ui->checkBox_PLOT_XLIMIT->isChecked()) {
+        plot += "xlimit";
+        plot += " ";
+        plot += ui->lineEditPLOT_XLO->text();
+        plot += " ";
+        plot += ui->lineEditPLOT_XHI->text();
+        plot += " ";
+    }
+
+    if (ui->radioButtonPLOT_XLOG->isChecked()) {
+        plot += "xlog";
+    } else if (ui->radioButtonPLOT_YLOG->isChecked()) {
+        plot += "ylog";
+    } else if (ui->radioButtonPLOT_LOGLOG->isChecked()) {
+        plot += "loglog";
+    } else if (ui->radioButtonPLOT_LINEAR->isChecked()) {
+        plot += "linear";
+    }
+
+    ui->lineEditPLOT_FINAL_EXP->setText(plot);
+
+
+}
+
+void MainWindow::on_pushButtonPLOT_APPEND_clicked()
+{
+    ui->plainTextEditAddAfter->appendPlainText(ui->lineEditPLOT_FINAL_EXP->text());
+    //ui->plainTextEditAddAfter->appendPlainText(" ");
+}
+
+void MainWindow::on_actionSave_State_triggered()
+{
+    QFile file("state.dat");
+
+    if (!file.open(QIODevice::WriteOnly))
+    {
+        //qDebug() << "Could not open file..";
+        return;
+    }
+
+    QDataStream out(&file);
+    out.setVersion(QDataStream::Qt_5_3);
+
+    //Here call the saveState methods of each object
+    op.saveState(&out);
+    dc.saveState(&out);
+    ac.saveState(&out);
+
+    file.flush();
+    file.close();
+}
+
+
+
+void MainWindow::on_actionLoad_State_triggered()
+{
+    QFile file("state.dat");
+
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        //qDebug() << "Could not open file..";
+        return;
+    }
+
+    QDataStream in(&file);
+    in.setVersion(QDataStream::Qt_5_3);
+
+    //Here call the saveState methods of each object
+    op.loadState(&in);
+    dc.loadState(&in);
+    ac.loadState(&in);
+
+    file.close();
+
+    //Update state
+    //op
+    ui->OP_checkBox->setChecked(op.enable);
+
+    //dc
+    ui->DC_checkBox->setChecked(dc.enable);
+    ui->lineEditDC_Src->setText(dc.src1);
+    ui->lineEditDC_Src2->setText(dc.src2);
+    ui->lineEditDC_Start->setText(dc.start1);
+    ui->lineEditDC_Start2->setText(dc.start2);
+    ui->lineEditDC_Step->setText(dc.step1);
+    ui->lineEditDC_Step2->setText(dc.step2);
+    ui->lineEditDC_Stop->setText(dc.stop1);
+    ui->lineEditDC_Stop2->setText(dc.stop2);
+
+    //ac
+    ui->AC_checkBox->setChecked(ac.enable);
+
+    if (!ac.scale.compare("lin")) {
+        ui->radioButtonAC_Lin->setChecked(true);
+    } else if (!ac.scale.compare("dec")) {
+        ui->radioButtonAC_Dec->setChecked(true);
+    } else if (!ac.scale.compare("oct")) {
+        ui->radioButtonAC_Oct->setChecked(true);
+    }
+
+    ui->lineEditAC_Start->setText(ac.startFrec);
+    ui->lineEditAC_Step->setText(ac.step);
+    ui->lineEditAC_Stop->setText(ac.stopFrec);
+
+
+}

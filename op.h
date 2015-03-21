@@ -11,6 +11,9 @@ public:
     bool enable;
     QString option;
 
+    void saveState(QDataStream* out);
+    void loadState(QDataStream* in);
+
 public:
     explicit Op(QObject *parent = 0);
     ~Op();

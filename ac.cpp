@@ -1,4 +1,5 @@
 #include "ac.h"
+#include <QDataStream>
 
 Ac::Ac(QObject *parent) :
     QObject(parent)
@@ -24,3 +25,12 @@ QString Ac::getControl()
 
 }
 
+void Ac::saveState(QDataStream* out)
+{
+    *out << enable << scale << step << startFrec << stopFrec << option;
+}
+
+void Ac::loadState(QDataStream* in)
+{
+    *in >> enable >> scale >> step >> startFrec >> stopFrec >> option;
+}
