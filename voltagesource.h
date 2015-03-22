@@ -32,7 +32,7 @@ public:
     bool dc_enable, ac_enable;
     QString dc,ac,acphase;
 
-    int tran_source;
+    qint32 tran_source;
     QString sin_vo,sin_va,sin_freq,sin_td,sin_theta;
     QString pulse_v1,pulse_v2,pulse_td,pulse_tr,pulse_tf,pulse_pw,pulse_per;
     QString exp_v1, exp_v2, exp_td1, exp_td2, exp_tau1, exp_tau2;
@@ -42,6 +42,9 @@ public:
     QString noise_na,noise_nt,noise_nalpha,noise_namp,noise_rtsam,noise_rtscapt,noise_rtsemt;
 
     void prepareOption();
+
+    void saveState(QDataStream* out);
+    void loadState(QDataStream* in);
 
 signals:
 

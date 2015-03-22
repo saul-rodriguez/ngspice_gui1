@@ -1,4 +1,5 @@
 #include "pz.h"
+#include <QDataStream>
 
 PZ::PZ(QObject *parent) : QObject(parent)
 {
@@ -28,4 +29,14 @@ QString PZ::getControl()
     option += "\n";
 
     return option;
+}
+
+void PZ::saveState(QDataStream* out)
+{
+    *out << enable << n1 << n2 << n3 << n4 << type << anal << option;
+}
+
+void PZ::loadState(QDataStream* in)
+{
+    *in >> enable >> n1 >> n2 >> n3 >> n4 >> type >> anal >> option;
 }

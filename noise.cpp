@@ -1,4 +1,5 @@
 #include "noise.h"
+#include <QDataStream>
 
 Noise::Noise(QObject *parent) :
     QObject(parent)
@@ -36,4 +37,14 @@ QString Noise::getControl()
 
     return option;
 
+}
+
+void Noise::saveState(QDataStream* out)
+{
+    *out << enable << vout << vref << src << scale << pts << fstart << fstop << pts_per_sum << option;
+}
+
+void Noise::loadState(QDataStream* in)
+{
+    *in >> enable >> vout >> vref >> src >> scale >> pts >> fstart >> fstop >> pts_per_sum >> option;
 }

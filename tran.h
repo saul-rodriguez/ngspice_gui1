@@ -18,6 +18,9 @@ public:
 
     QString getControl();
 
+    void saveState(QDataStream* out);
+    void loadState(QDataStream* in);
+
 public:
     explicit Tran(QObject *parent = 0);
 

@@ -14,6 +14,9 @@ public:
 
     QString getControl();
 
+    void saveState(QDataStream* out);
+    void loadState(QDataStream* in);
+
 public:
     explicit PZ(QObject *parent = 0);
     ~PZ();

@@ -22,7 +22,7 @@ public:
 
 public:
     VoltageSource source[NUM_SOURCES];
-    int SourceNum;
+    qint32 SourceNum;
 
     //VoltageSource vsource[NUM_SOURCES];
     //int VoltageSourceNum;

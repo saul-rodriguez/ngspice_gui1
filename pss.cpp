@@ -1,4 +1,5 @@
 #include "pss.h"
+#include <QDataStream>
 
 PSS::PSS(QObject *parent) : QObject(parent)
 {
@@ -39,3 +40,12 @@ QString PSS::getControl()
 
 }
 
+void PSS::saveState(QDataStream* out)
+{
+    *out << enable << gfreq << tstab << oscnob << psspoints << harms << sciter << steadycoeff << uic << option;
+}
+
+void PSS::loadState(QDataStream* in)
+{
+    *in  >> enable >> gfreq >> tstab >> oscnob >> psspoints >> harms >> sciter >> steadycoeff >> uic >> option;
+}

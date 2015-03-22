@@ -15,6 +15,9 @@ public:
 
     QString getControl();
 
+    void saveState(QDataStream* out);
+    void loadState(QDataStream* in);
+
 public:
     explicit Noise(QObject *parent = 0);
 

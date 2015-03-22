@@ -442,7 +442,7 @@ void MainWindow::on_comboBox_Source_currentIndexChanged(int index)
                     ui->radioButtonAM->setChecked(true);
                     break;
         case FM:
-                    ui->radioButtonAM->setChecked(true);
+                    ui->radioButtonFM->setChecked(true);
                     break;
         case TRNOISE:
                     ui->radioButtonNOISE->setChecked(true);
@@ -457,8 +457,10 @@ void MainWindow::updateSourceTrans(int selected_source_index)
     if(ui->radioButtonNONE->isChecked()) { // No indep. transient source
         spice.source[selected_source_index].tran_source = NONE;
 
-    } else if (ui->radioButtonSIN->isChecked()) { // SIN source
+    }
+    if (ui->radioButtonSIN->isChecked()) { // SIN source
         spice.source[selected_source_index].tran_source = SIN;
+    }
         spice.source[selected_source_index].sin_vo = ui->lineEditSIN_VO->text();
         spice.source[selected_source_index].sin_va = ui->lineEditSIN_VA->text();
         spice.source[selected_source_index].sin_freq = ui->lineEditSIN_FREQ->text();
@@ -466,8 +468,10 @@ void MainWindow::updateSourceTrans(int selected_source_index)
         spice.source[selected_source_index].sin_theta = ui->lineEditSIN_THETA->text();
 
 
-    } else if (ui->radioButtonPULSE->isChecked()) { //PULSE
+
+    if (ui->radioButtonPULSE->isChecked()) { //PULSE
         spice.source[selected_source_index].tran_source = PULSE;
+    }
         spice.source[selected_source_index].pulse_v1 = ui->lineEditPULSE_V1->text();
         spice.source[selected_source_index].pulse_v2 = ui->lineEditPULSE_V2->text();
         spice.source[selected_source_index].pulse_td = ui->lineEditPULSE_TD->text();
@@ -476,8 +480,9 @@ void MainWindow::updateSourceTrans(int selected_source_index)
         spice.source[selected_source_index].pulse_pw = ui->lineEditPULSE_PW->text();
         spice.source[selected_source_index].pulse_per = ui->lineEditPULSE_PER->text();
 
-    } else if (ui->radioButtonEXP->isChecked()) { //EXP
+    if (ui->radioButtonEXP->isChecked()) { //EXP
         spice.source[selected_source_index].tran_source = EXP;
+    }
         spice.source[selected_source_index].exp_v1 = ui->lineEditEXP_V1->text();
         spice.source[selected_source_index].exp_v2 = ui->lineEditEXP_V2->text();
         spice.source[selected_source_index].exp_td1 = ui->lineEditEXP_TD1->text();
@@ -485,12 +490,15 @@ void MainWindow::updateSourceTrans(int selected_source_index)
         spice.source[selected_source_index].exp_td2 = ui->lineEditEXP_TD2->text();
         spice.source[selected_source_index].exp_tau2 = ui->lineEditEXP_TAU2->text();
 
-    } else if (ui->radioButtonPWL->isChecked()) { //PWL
+
+    if (ui->radioButtonPWL->isChecked()) { //PWL
         spice.source[selected_source_index].tran_source = PWL;
+    }
         spice.source[selected_source_index].pwl = ui->lineEditPWL->text();
 
-    } else if (ui->radioButtonFM->isChecked()) { //FM
+    if (ui->radioButtonFM->isChecked()) { //FM
         spice.source[selected_source_index].tran_source = FM;
+    }
         spice.source[selected_source_index].fm_vo = ui->lineEditFM_VO->text();
         spice.source[selected_source_index].fm_va = ui->lineEditFM_VA->text();
         spice.source[selected_source_index].fm_fc = ui->lineEditFM_FC->text();
@@ -498,16 +506,18 @@ void MainWindow::updateSourceTrans(int selected_source_index)
         spice.source[selected_source_index].fm_fs = ui->lineEditFM_FS->text();
 
 
-    } else if (ui->radioButtonAM->isChecked()) { //AM
+    if (ui->radioButtonAM->isChecked()) { //AM
         spice.source[selected_source_index].tran_source = AM;
+    }
         spice.source[selected_source_index].am_va = ui->lineEditAM_VA->text();
         spice.source[selected_source_index].am_vo = ui->lineEditAM_VO->text();
         spice.source[selected_source_index].am_mf = ui->lineEditAM_MF->text();
         spice.source[selected_source_index].am_fc = ui->lineEditAM_FC->text();
         spice.source[selected_source_index].am_td = ui->lineEditAM_TD->text();
 
-    } else if (ui->radioButtonNOISE->isChecked()) { //TRNOISE
+    if (ui->radioButtonNOISE->isChecked()) { //TRNOISE
         spice.source[selected_source_index].tran_source = TRNOISE;
+    }
         spice.source[selected_source_index].noise_na = ui->lineEditNOISE_NA->text();
         spice.source[selected_source_index].noise_nt = ui->lineEditNOISE_NT->text();
         spice.source[selected_source_index].noise_nalpha = ui->lineEditNOISE_NALPHA->text();
@@ -515,10 +525,6 @@ void MainWindow::updateSourceTrans(int selected_source_index)
         spice.source[selected_source_index].noise_rtsam = ui->lineEditNOISE_RTSAM->text();
         spice.source[selected_source_index].noise_rtscapt = ui->lineEditNOISE_RTSCAPT->text();
         spice.source[selected_source_index].noise_rtsemt = ui->lineEditNOISE_RTSEMT->text();
-
-    }
-
-
 }
 
 void MainWindow::on_pushButtonApply2_clicked()
@@ -690,7 +696,20 @@ void MainWindow::on_pushButtonPLOT_APPEND_clicked()
 
 void MainWindow::on_actionSave_State_triggered()
 {
-    QFile file("state.dat");
+    //Check if state directory exists, if not create one
+    QDir dir("STATES");
+    if (!dir.exists()) {
+        dir.mkpath(".");
+    }
+
+    QString stateFileName = QFileDialog::getSaveFileName(this,tr("Save State File"),
+                                                         "untitled.sta",tr("State Files(*.sta)"));
+
+    if (!stateFileName.compare("")) // Cancel button pressed in dialog
+        return;
+
+    //QFile file("state.dat");
+    QFile file(stateFileName);
 
     if (!file.open(QIODevice::WriteOnly))
     {
@@ -705,6 +724,21 @@ void MainWindow::on_actionSave_State_triggered()
     op.saveState(&out);
     dc.saveState(&out);
     ac.saveState(&out);
+    tran.saveState(&out);
+    pss.saveState(&out);
+    noise.saveState(&out);
+    pz.saveState(&out);
+
+    //Save sources config
+    out << spice.SourceNum;
+    for (int i=0; i<spice.SourceNum; i++) {
+        spice.source[i].saveState(&out);
+    }
+
+    //Save fields BEFORE and AFTER
+    out << ui->plainTextEditAddBefore->toPlainText();
+    out << ui->plainTextEditAddAfter->toPlainText();
+
 
     file.flush();
     file.close();
@@ -714,7 +748,15 @@ void MainWindow::on_actionSave_State_triggered()
 
 void MainWindow::on_actionLoad_State_triggered()
 {
-    QFile file("state.dat");
+    QString stateFileName;
+
+    stateFileName = QFileDialog::getOpenFileName(this,
+        tr("Open State File"), "~", tr("State Files(*.sta)"));
+
+    if (!stateFileName.compare(""))
+        return;
+
+    QFile file(stateFileName);
 
     if (!file.open(QIODevice::ReadOnly))
     {
@@ -729,6 +771,24 @@ void MainWindow::on_actionLoad_State_triggered()
     op.loadState(&in);
     dc.loadState(&in);
     ac.loadState(&in);
+    tran.loadState(&in);
+    pss.loadState(&in);
+    noise.loadState(&in);
+    pz.loadState(&in);
+
+    //Load sources config
+    in >> spice.SourceNum;
+    for (int i=0; i<spice.SourceNum; i++) {
+        spice.source[i].loadState(&in);
+    }
+
+    //Update BEFORE and AFTER fields
+    QString aux_before,aux_after;
+    in >> aux_before;
+    ui->plainTextEditAddBefore->setPlainText(aux_before);
+    in >> aux_after;
+    ui->plainTextEditAddAfter->setPlainText(aux_after);
+
 
     file.close();
 
@@ -762,5 +822,69 @@ void MainWindow::on_actionLoad_State_triggered()
     ui->lineEditAC_Step->setText(ac.step);
     ui->lineEditAC_Stop->setText(ac.stopFrec);
 
+    //tran
+    ui->TRAN_checkBox->setChecked(tran.enable);
+    ui->lineEditTRAN_step->setText(tran.step);
+    ui->lineEditTRAN_stop->setText(tran.stop);
+    ui->lineEditTRAN_start->setText(tran.start);
+    ui->lineEditTRAN_tmax->setText(tran.max);
+    ui->TRAN_uic_checkBox->setChecked(tran.uic);
+
+    //pss
+    ui->PSS_checkBox->setChecked(pss.enable);
+    ui->lineEditPSS_gfreq->setText(pss.gfreq);
+    ui->lineEditPSS_tstab->setText(pss.tstab);
+    ui->lineEditPSS_oscnob->setText(pss.oscnob);
+    ui->lineEditPSS_psspoints->setText(pss.psspoints);
+    ui->lineEditPSS_harms->setText(pss.harms);
+    ui->lineEditPSS_sciter->setText(pss.sciter);
+    ui->lineEditPSS_steadycoeff->setText(pss.steadycoeff);
+    ui->PSS_uic_checkBox->setChecked(pss.uic);
+
+    //noise
+    ui->NOISE_checkBox->setChecked(noise.enable);
+    ui->lineEditNO_VOUT->setText(noise.vout);
+    ui->lineEditNO_VREF->setText(noise.vref);
+
+    ui->lineEditNO_SRC->setText(noise.src);
+    ui->lineEditNO_Step->setText(noise.pts);
+    ui->lineEditNO_Start->setText(noise.fstart);
+    ui->lineEditNO_Stop->setText(noise.fstop);
+    ui->lineEditNO_PTS_PER_SUM->setText(noise.pts_per_sum);
+
+    if (!noise.scale.compare("lin")) {
+        ui->radioButtonNO_Lin->setChecked(true);
+    } else if (!ac.scale.compare("dec")) {
+        ui->radioButtonNO_Dec->setChecked(true);
+    } else if (!ac.scale.compare("oct")) {
+        ui->radioButtonNO_Oct->setChecked(true);
+    }
+
+    //pz
+    ui->PZ_checkBox->setChecked(pz.enable);
+    ui->lineEditPZ_V1->setText(pz.n1);
+    ui->lineEditPZ_V2->setText(pz.n2);
+    ui->lineEditPZ_V3->setText(pz.n3);
+    ui->lineEditPZ_V4->setText(pz.n4);
+
+    if (!pz.type.compare("vol")) {
+        ui->radioButtonPZ_vol->setChecked(true);
+    } else if (!pz.type.compare("cur")) {
+        ui->radioButtonPZ_cur->setChecked(true);
+    }
+
+    if (!pz.anal.compare("pz")) {
+        ui->radioButtonPZ_pz->setChecked(true);
+    } else if (!pz.anal.compare("pol")) {
+        ui->radioButtonPZ_pol->setChecked(true);
+    } else if (!pz.anal.compare("zer")) {
+        ui->radioButtonPZ_zer->setChecked(true);
+    }
+
+    //Update source
+    on_comboBox_Source_currentIndexChanged(0);
 
 }
+
+
+

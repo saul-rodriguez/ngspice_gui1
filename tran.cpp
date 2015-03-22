@@ -1,4 +1,5 @@
 #include "tran.h"
+#include <QDataStream>
 
 Tran::Tran(QObject *parent) :
     QObject(parent)
@@ -27,4 +28,13 @@ QString Tran::getControl()
     option += "\n";
 
     return option;
+}
+
+void Tran::saveState(QDataStream* out)
+{
+    *out << enable << step << stop << start << max << uic << option;
+}
+void Tran::loadState(QDataStream* in)
+{
+    *in >> enable >> step >> stop >> start >> max >> uic >> option;
 }
