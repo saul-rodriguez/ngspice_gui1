@@ -22,6 +22,7 @@ class MainWindow : public QMainWindow
 
 private:
     QString fileName;
+    QString workdir;
     QString fileNameSim;
     QString netlistName;
 

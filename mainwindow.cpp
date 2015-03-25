@@ -12,6 +12,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     ui->lineEditOP_TEMP->setText("27");
+
+    workdir = "~";
 }
 
 MainWindow::~MainWindow()
@@ -27,6 +29,8 @@ void MainWindow::on_actionOpen_Spice_File_triggered()
 
     QFileInfo fi(fileName);
     QString name = fi.fileName();
+    QDir dir = fi.absoluteDir();
+    workdir = dir.absolutePath();
 
     if (!name.compare(""))
         return;
@@ -697,13 +701,16 @@ void MainWindow::on_pushButtonPLOT_APPEND_clicked()
 void MainWindow::on_actionSave_State_triggered()
 {
     //Check if state directory exists, if not create one
-    QDir dir("STATES");
+    QString path;
+    path = workdir + "/" + "STATES";
+    QDir dir(path);
     if (!dir.exists()) {
         dir.mkpath(".");
     }
 
+    path += "/untitled.sta";
     QString stateFileName = QFileDialog::getSaveFileName(this,tr("Save State File"),
-                                                         "untitled.sta",tr("State Files(*.sta)"));
+                                                         path,tr("State Files(*.sta)"));
 
     if (!stateFileName.compare("")) // Cancel button pressed in dialog
         return;
@@ -748,10 +755,13 @@ void MainWindow::on_actionSave_State_triggered()
 
 void MainWindow::on_actionLoad_State_triggered()
 {
+    QString path;
+    path = workdir + "/" + "STATES";
+
     QString stateFileName;
 
     stateFileName = QFileDialog::getOpenFileName(this,
-        tr("Open State File"), "~", tr("State Files(*.sta)"));
+        tr("Open State File"), path, tr("State Files(*.sta)"));
 
     if (!stateFileName.compare(""))
         return;
