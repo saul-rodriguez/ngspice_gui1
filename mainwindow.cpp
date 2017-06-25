@@ -174,6 +174,11 @@ void MainWindow::on_actionRun_ngspice_triggered()
     command = "/usr/local/bin/ngspice ";
     command += fileNameSim;
 
+    QString startdir;
+    startdir = "--working-directory=";
+    startdir += workdir;
+
+
     QProcess* process;
 
     process = new QProcess(this);
@@ -187,7 +192,8 @@ void MainWindow::on_actionRun_ngspice_triggered()
    // process.write("ls\n");
     process.waitForFinished(-1);
 */
-    process->start("gnome-terminal",QStringList() << "-e" << command);
+    //process->start("gnome-terminal",QStringList() << "-e" << command);
+    process->start("gnome-terminal",QStringList() << startdir << "-e" << command);
 
 }
 
